@@ -1,2 +1,27 @@
 ---
-# handlers file for ansible-role-monit-handlers
+# see
+# https://stackoverflow.com/questions/22649333/ansible-notify-handlers-in-another-role
+# for info on using a separate role and dependencies to share handlers
+
+# see https://stackoverflow.com/a/43451315/1163042 for info on
+# multi-step/conditional handlers
+
+- name: validate monit config
+  command: "monit -t"
+  register: monit_config_valid
+  changed_when: false
+  listen: reload monit
+
+- name: reload monit service
+  systemd:
+    name: monit
+    enabled: yes
+    state: reloaded
+  when: monit_config_valid
+  listen: reload monit
+
+- name: stop ansible run if monit config failed
+  fail:
+    msg: monit config failed
+  when: not monit_config_valid
+  listen: reload monit
