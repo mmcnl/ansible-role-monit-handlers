@@ -2,7 +2,7 @@
 dependencies: []
 
 galaxy_info:
-  role_name: monit-handlers
+  role_name: monit_handlers
   author: mmcnl
   description: "validate new configuration before reloading monit"
   license: license (BSD, MIT)
