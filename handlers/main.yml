@@ -17,11 +17,11 @@
     name: monit
     enabled: yes
     state: reloaded
-  when: monit_config_valid
+  when: monit_config_valid|bool
   listen: reload monit
 
 - name: stop ansible run if monit config failed
   fail:
     msg: monit config failed
-  when: not monit_config_valid
+  when: not monit_config_valid|bool
   listen: reload monit
