@@ -12,16 +12,16 @@
   changed_when: false
   listen: reload monit
 
+- name: stop ansible run if monit config failed
+  fail:
+    msg: monit config failed
+  when: monit_config_valid.failed
+  listen: reload monit
+
 - name: reload monit service
   systemd:
     name: monit
     enabled: yes
     state: reloaded
-  when: monit_config_valid|bool
-  listen: reload monit
-
-- name: stop ansible run if monit config failed
-  fail:
-    msg: monit config failed
-  when: not monit_config_valid|bool
+  when: not monit_config_valid.failed
   listen: reload monit
